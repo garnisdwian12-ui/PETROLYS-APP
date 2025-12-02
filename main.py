@@ -193,7 +193,21 @@ if st.session_state.logged_in:
                     kategori_total = f"{kategori_api} & {kategori_sulfur}"
 
                     # Harga per barel: realtime jika tersedia, fallback default
-                    harga_barel = oil_price if oil_price is not None else 75.0
+                    base_price = oil_price if oil_price is not None else 75.0
+
+                    # Penyesuaian harga sesuai kualitas
+                    if kategori_api == "Light" and kategori_sulfur == "Sweet":
+                        harga_barel = base_price
+                    elif kategori_api == "Light" and kategori_sulfur == "Sour":
+                        harga_barel = base_price * 0.95
+                    elif kategori_api == "Medium" and kategori_sulfur == "Sweet":
+                        harga_barel = base_price * 0.90
+                    elif kategori_api == "Medium" and kategori_sulfur == "Sour":
+                        harga_barel = base_price * 0.85
+                    elif kategori_api == "Heavy" and kategori_sulfur == "Sweet":
+                        harga_barel = base_price * 0.80
+                    else:  # Heavy & Sour
+                        harga_barel = base_price * 0.75
 
                     # Estimasi volume & nilai
                     volume_liter = berat / DENSITAS
